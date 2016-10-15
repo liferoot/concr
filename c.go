@@ -13,15 +13,16 @@ type C struct {
 
 func (c *C) Inc() uint32 {
 	n := atomic.AddUint64(&c.state, 1)
-	if n&valueMask == 1 {
+	v := n & valueMask
+	if v == 1 {
 		for !atomic.CompareAndSwapUint64(&c.state, n, n|waitLock) {
 		}
 	}
-	return uint32(n)
+	return uint32(v)
 }
 
 func (c *C) Dec() uint32 {
-	return uint32(atomic.AddUint64(&c.state, ^uint64(0)))
+	return uint32(atomic.AddUint64(&c.state, ^uint64(0)) & valueMask)
 }
 
 func (c *C) Get() (uint32, uint32) {
