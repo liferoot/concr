@@ -57,7 +57,7 @@ func (rx *Receiver) receive(id int) {
 		payload()
 	}
 	rx.c.Dec()
-	rx.echo(`stop recieve`, id)
+	rx.echo(`stop receive`, id)
 }
 
 func (rx *Receiver) spawn() {
